@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wingo VIP Predictions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>🎯 VIP Wingo Predictions</h1>
+  <div class="card">
+    <div id="loading">Fetching predictions...</div>
+    <div id="output" style="display:none;">
+      <div class="title">Next Prediction</div>
+      <div class="prediction">Size: <span id="size"></span></div>
+      <div class="prediction">Color: <span id="color"></span></div>
+      <div class="numbers">Numbers: <span id="numbers"></span></div>
+    </div>
+    <button onclick="getPrediction()">Refresh</button>
+  </div>
+
+  <script>
+    async function getPrediction() {
+      document.getElementById("loading").style.display = "block";
+      document.getElementById("output").style.display = "none";
+      try {
+        const resp = await fetch("https://YOUR_BACKEND.up.railway.app/predict");
+        const data = await resp.json();
+        document.getElementById("size").innerText = data.prediction.size;
+        document.getElementById("color").innerText = data.prediction.color;
+        document.getElementById("numbers").innerText = data.prediction.numbers.join(", ");
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("output").style.display = "block";
+      } catch (err) {
+        document.getElementById("loading").innerText = "Error loading data.";
+      }
+    }
+
+    getPrediction();
+    setInterval(getPrediction, 15000); // auto-refresh
+  </script>
+</body>
+</html>
